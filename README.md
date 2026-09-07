@@ -12,6 +12,29 @@ A unified chat platform that bridges **WhatsApp** and **Telegram** users in a si
 - **Real-time messaging** — WebSocket-based live delivery
 - **Demo mode** — Works standalone in any browser (no backend required)
 
+## 📸 Screenshots
+
+### Authentication & Setup
+![Login](screenshots/01-login.png)
+![QR Modal](screenshots/02-qr-modal.png)
+
+### Main Interface
+![App Dashboard](screenshots/03-app.png)
+![Chat Open](screenshots/04-chat-open.png)
+
+### Messaging Features
+![Message Sent](screenshots/05-message-sent.png)
+![New Chat](screenshots/06-new-chat.png)
+
+### Advanced Features
+![Temp Chat](screenshots/07-temp-chat.png)
+![Temp Chat Open](screenshots/08-temp-open.png)
+
+### Customization & Platforms
+![Light Theme](screenshots/09-light-theme.png)
+![Telegram Filter](screenshots/10-telegram-filter.png)
+![Mobile View](screenshots/11-mobile.png)
+
 ## 🚀 Quick Start
 
 ### Option 1: Demo Mode (Zero Setup)
