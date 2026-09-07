@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bridge Chat — WhatsApp × Telegram</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- ============================================ -->
+  <!-- LOGIN SCREEN -->
+  <!-- ============================================ -->
+  <div id="loginScreen" class="screen active">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="brand">
+          <div class="brand-logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="16" fill="url(#brand-grad)"/>
+              <path d="M10 12h12M10 16h12M10 20h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="brand-grad" x1="0" y1="0" x2="32" y2="32">
+                  <stop stop-color="#00A884"/>
+                  <stop offset="1" stop-color="#3390EC"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h1>Bridge Chat</h1>
+          <p class="brand-sub">WhatsApp × Telegram — One inbox</p>
+        </div>
+      </div>
+
+      <div class="login-tabs">
+        <button class="tab active" data-tab="qr">QR Code</button>
+        <button class="tab" data-tab="phone">Phone</button>
+      </div>
+
+      <!-- QR Login -->
+      <div id="qrPanel" class="login-panel active">
+        <p class="panel-hint">Choose your platform to sign in</p>
+
+        <div class="platform-grid">
+          <button class="platform-btn whatsapp" data-platform="whatsapp">
+            <div class="platform-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3 1.3 4.8 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+            </div>
+            <div class="platform-name">WhatsApp</div>
+            <div class="platform-sub">Sign in with QR</div>
+          </button>
+
+          <button class="platform-btn telegram" data-platform="telegram">
+            <div class="platform-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 6.9l-1.5 7.2c-.1.5-.4.6-.8.4l-2.3-1.7-1.1 1.1c-.1.1-.2.2-.5.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1l-5.6 3.5-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.1.8.1.7.6z"/></svg>
+            </div>
+            <div class="platform-name">Telegram</div>
+            <div class="platform-sub">Sign in with QR</div>
+          </button>
+        </div>
+
+        <div class="info-card">
+          <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>
+            <strong>How it works:</strong> Scan QR with your phone's app camera. We'll auto-generate a cross-platform ID so you can chat with users on the other platform instantly.
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone Login -->
+      <div id="phonePanel" class="login-panel">
+        <p class="panel-hint">Enter your phone number with country code</p>
+        <div class="phone-form">
+          <input type="tel" id="phoneInput" placeholder="+1 415 555 2671" autocomplete="tel">
+          <div class="phone-platform">
+            <label><input type="radio" name="phonePlatform" value="whatsapp" checked> WhatsApp</label>
+            <label><input type="radio" name="phonePlatform" value="telegram"> Telegram</label>
+          </div>
+          <button id="phoneLoginBtn" class="primary-btn">Send Verification Code</button>
+        </div>
+      </div>
+
+      <!-- QR Display Modal -->
+      <div id="qrModal" class="modal">
+        <div class="modal-content qr-modal-content">
+          <button class="modal-close" id="qrModalClose">×</button>
+          <h3 id="qrModalTitle">Scan QR Code</h3>
+          <div class="qr-display" id="qrDisplay">
+            <div class="qr-loading">Generating QR...</div>
+          </div>
+          <div class="qr-status" id="qrStatus">
+            <div class="status-dot pending"></div>
+            <span>Waiting for scan...</span>
+          </div>
+          <div class="qr-timer" id="qrTimer">Expires in <strong>60</strong>s</div>
+          <button class="text-btn" id="qrSimulateBtn">Simulate Scan (Demo)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MAIN APP -->
+  <!-- ============================================ -->
+  <div id="appScreen" class="screen">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <div class="me" id="meBtn">
+          <div class="avatar" id="meAvatar">U</div>
+          <div class="me-info">
+            <div class="me-name" id="meName">User</div>
+            <div class="me-platform" id="mePlatform">whatsapp</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" id="newTempBtn" title="New Temp Chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          </button>
+          <button class="icon-btn" id="themeToggle" title="Toggle theme">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+          </button>
+          <button class="icon-btn" id="logoutBtn" title="Logout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Cross-platform ID banner -->
+      <div class="xid-banner" id="xidBanner">
+        <div class="xid-label">Your cross-platform ID</div>
+        <div class="xid-value" id="xidValue">@loading...</div>
+        <button class="xid-copy" id="xidCopy" title="Copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="Search or start new chat">
+      </div>
+
+      <!-- Filter -->
+      <div class="filter-bar">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="whatsapp">WhatsApp</button>
+        <button class="filter-chip" data-filter="telegram">Telegram</button>
+        <button class="filter-chip" data-filter="temp">Temp</button>
+      </div>
+
+      <!-- Chat list -->
+      <div class="chat-list" id="chatList">
+        <!-- Chats will be rendered here -->
+      </div>
+
+      <button class="new-chat-fab" id="newChatBtn" title="New Chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </button>
+    </aside>
+
+    <!-- Chat pane -->
+    <main class="chat-pane" id="chatPane">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">
+          <svg viewBox="0 0 64 64" fill="none" stroke="url(#empty-grad)" stroke-width="2">
+            <defs>
+              <linearGradient id="empty-grad" x1="0" y1="0" x2="64" y2="64">
+                <stop stop-color="#00A884"/>
+                <stop offset="1" stop-color="#3390EC"/>
+              </linearGradient>
+            </defs>
+            <path d="M8 16a8 8 0 018-8h32a8 8 0 018 8v24a8 8 0 01-8 8H22l-10 8V16z"/>
+            <path d="M22 24h20M22 32h14" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2>Welcome to Bridge Chat</h2>
+        <p>Select a chat to start messaging across WhatsApp and Telegram</p>
+        <div class="empty-actions">
+          <button class="primary-btn" id="emptyNewChat">Start a new chat</button>
+          <button class="secondary-btn" id="emptyNewTemp">Create temp chat</button>
+        </div>
+      </div>
+
+      <!-- Active chat view -->
+      <div class="chat-view hidden" id="chatView">
+        <header class="chat-header">
+          <button class="icon-btn back-btn" id="backBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <div class="chat-header-info">
+            <div class="chat-avatar" id="chatAvatar">U</div>
+            <div>
+              <div class="chat-name" id="chatName">User</div>
+              <div class="chat-status" id="chatStatus">online</div>
+            </div>
+          </div>
+          <div class="chat-header-actions">
+            <button class="icon-btn" id="chatVideoBtn" title="Voice call">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.1-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>
+            </button>
+            <button class="icon-btn" id="chatMoreBtn" title="More">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="messages" id="messages">
+          <!-- Messages will be rendered here -->
+        </div>
+
+        <footer class="composer">
+          <button class="icon-btn" id="attachBtn" title="Attach">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.4 11.5l-9.2 9.2a5.5 5.5 0 11-7.8-7.8l9.2-9.2a3.7 3.7 0 015.2 5.2l-9.2 9.2a2 2 0 11-2.8-2.8l8.5-8.5"/></svg>
+          </button>
+          <button class="icon-btn" id="emojiBtn" title="Emoji">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+          </button>
+          <div class="composer-input-wrap">
+            <input type="text" id="messageInput" placeholder="Type a message" autocomplete="off">
+          </div>
+          <button class="icon-btn voice-btn" id="voiceBtn" title="Voice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3zM19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+          </button>
+          <button class="icon-btn send-btn hidden" id="sendBtn" title="Send">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          </button>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODALS -->
+  <!-- ============================================ -->
+
+  <!-- New Chat Modal -->
+  <div id="newChatModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" data-modal-close="newChatModal">×</button>
+      <h3>Start a new chat</h3>
+      <p class="modal-hint">Find users by their cross-platform ID</p>
+      <div class="search-bar inline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="newChatSearch" placeholder="@username or +1... or wa_id">
+      </div>
+      <div class="user-list" id="newChatUserList">
+        <!-- Users rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- New Temp Chat Modal -->
+  <div id="newTempModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" data-modal-close="newTempModal">×</button>
+      <h3>Create Temp Chat</h3>
+      <p class="modal-hint">Ephemeral chat that auto-deletes after timer expires</p>
+
+      <div class="form-group">
+        <label>Duration</label>
+        <div class="duration-options">
+          <button class="duration-chip" data-minutes="15">15m</button>
+          <button class="duration-chip active" data-minutes="60">1h</button>
+          <button class="duration-chip" data-minutes="360">6h</button>
+          <button class="duration-chip" data-minutes="1440">24h</button>
+        </div>
+      </div>
+
+      <div id="tempResult" class="temp-result hidden">
+        <div class="temp-id-display">
+          <div class="temp-id-label">Share this code</div>
+          <div class="temp-id-value" id="tempIdValue">ABC123</div>
+        </div>
+        <div class="temp-actions">
+          <button class="secondary-btn" id="tempCopyBtn">Copy Code</button>
+          <button class="primary-btn" id="tempOpenBtn">Open Chat</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Join existing temp chat</label>
+        <div class="join-row">
+          <input type="text" id="tempJoinInput" placeholder="Enter 6-char code" maxlength="6">
+          <button class="primary-btn" id="tempJoinBtn">Join</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profileModal" class="modal">
+    <div class="modal-content profile-modal-content">
+      <button class="modal-close" data-modal-close="profileModal">×</button>
+      <div class="profile-avatar-large" id="profileAvatar">U</div>
+      <h2 id="profileName">User</h2>
+      <div class="profile-platform" id="profilePlatform">whatsapp</div>
+      <div class="profile-xid">
+        <div class="profile-xid-label">Cross-platform ID</div>
+        <div class="profile-xid-value" id="profileXid">@user_xxx</div>
+      </div>
+      <div class="profile-actions">
+        <button class="secondary-btn" id="profileMessageBtn">Send Message</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
